@@ -38,27 +38,64 @@ const navItems = [
 const dropdownVariants = {
     hidden: { 
         opacity: 0, 
-        y: -10,
-        rotateX: -90,
-        transition: { duration: 0.3, ease: 'easeInOut' }
+        y: -20,
+        scale: 0.95,
+        transition: { 
+            duration: 0.2, 
+            ease: [0.4, 0.0, 0.2, 1] // Custom cubic-bezier for smooth easing
+        }
     },
     visible: { 
         opacity: 1, 
         y: 0,
-        rotateX: 0,
+        scale: 1,
         transition: { 
-            duration: 0.4, 
-            ease: 'easeInOut',
-            staggerChildren: 0.05,
-            delayChildren: 0.1,
+            duration: 0.3, 
+            ease: [0.4, 0.0, 0.2, 1],
+            staggerChildren: 0.08,
+            delayChildren: 0.05,
         }
     }
 };
 
 const columnVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    hidden: { 
+        opacity: 0, 
+        y: 15,
+        transition: { 
+            duration: 0.2, 
+            ease: [0.4, 0.0, 0.2, 1]
+        }
+    },
+    visible: { 
+        opacity: 1, 
+        y: 0,
+        transition: { 
+            duration: 0.3, 
+            ease: [0.4, 0.0, 0.2, 1]
+        }
+    }
 };
+
+// Demo Logo Component
+const Logo = ({ className = "" }) => (
+  <div className={`flex items-center gap-2 ${className}`}>
+    <div className="relative">
+      <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
+        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+        <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
+      </div>
+    </div>
+    <div className="flex flex-col">
+      <span className="font-bold text-xl text-gray-900 leading-tight">Engineer</span>
+      <span className="font-bold text-xl text-blue-600 leading-tight">Works</span>
+    </div>
+  </div>
+);
 
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -97,8 +134,8 @@ const Navbar = () => {
             }`}
         >
             <div className="flex items-center gap-4 md:gap-8">
-                <Link to="/" className="flex items-center gap-2 font-bold text-black hover:text-blue-600 transition-colors duration-300 text-xl md:text-2xl">
-                    {navItems[0].icon}
+                <Link to="/" className="flex items-center gap-2 font-bold text-black hover:text-blue-600 transition-all duration-300 text-xl md:text-2xl group">
+                    <Logo className="group-hover:scale-105 transition-transform duration-300" />
                 </Link>
                 
                 {/* Hamburger for mobile */}
@@ -114,7 +151,12 @@ const Navbar = () => {
                                 <li key={item.name} className="relative" onMouseEnter={() => setIsDropdownOpen(true)} onMouseLeave={() => setIsDropdownOpen(false)}>
                                     <button className="text-black font-medium hover:text-blue-600 transition-colors duration-300 relative group flex items-center text-base md:text-lg">
                                         {item.name}
-                                        <FiChevronDown className={`ml-1 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                                        <motion.div
+                                            animate={{ rotate: isDropdownOpen ? 180 : 0 }}
+                                            transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
+                                        >
+                                            <FiChevronDown className="ml-1" />
+                                        </motion.div>
                                     </button>
                                     <AnimatePresence>
                                         {isDropdownOpen && (
@@ -123,7 +165,7 @@ const Navbar = () => {
                                                 animate="visible"
                                                 exit="hidden"
                                                 variants={dropdownVariants}
-                                                className="absolute left-1/2 -translate-x-1/2 mt-4 w-max max-w-5xl bg-white rounded-lg shadow-2xl p-5 md:p-7"
+                                                className="absolute left-1/2 -translate-x-1/2 mt-4 w-max max-w-5xl bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-100/50 p-5 md:p-7"
                                             >
                                                 <motion.div 
                                                     className="grid grid-cols-1 md:grid-cols-4 gap-x-7 md:gap-x-10 gap-y-5 md:gap-y-6"
@@ -131,17 +173,24 @@ const Navbar = () => {
                                                 >
                                                     {Object.entries(productData).map(([category, subcategories]) => (
                                                         <motion.div key={category} variants={columnVariants}>
-                                                            <h3 className="font-bold text-gray-900 text-base md:text-lg mb-3 md:mb-4 border-b-2 border-blue-500 pb-2">{category}</h3>
+                                                            <motion.h3 
+                                                                className="font-bold text-gray-900 text-base md:text-lg mb-3 md:mb-4 border-b-2 border-blue-500 pb-2"
+                                                                initial={{ opacity: 0, x: -10 }}
+                                                                animate={{ opacity: 1, x: 0 }}
+                                                                transition={{ duration: 0.3, delay: 0.1 }}
+                                                            >
+                                                                {category}
+                                                            </motion.h3>
                                                             {Object.entries(subcategories).map(([subcategory, items]) => (
                                                                 <div key={subcategory} className="mb-4">
-                                                                    <h4 className="font-semibold text-gray-800 text-sm md:text-base cursor-pointer hover:text-blue-600" onClick={() => {
+                                                                    <h4 className="font-semibold text-gray-800 text-sm md:text-base cursor-pointer hover:text-blue-600 transition-all duration-200 hover:translate-x-1" onClick={() => {
                                                                         navigate(`/catalogue?column=${encodeURIComponent(subcategory)}`);
                                                                         setIsDropdownOpen(false);
                                                                     }}>{subcategory}</h4>
                                                                     <ul className="mt-3 space-y-2">
                                                                         {items.map(item => (
                                                                             <li key={item}>
-                                                                                <a href="#" className="text-gray-600 hover:text-blue-600 text-sm block transition-colors duration-200">{item}</a>
+                                                                                <a href="#" className="text-gray-600 hover:text-blue-600 text-sm block transition-all duration-200 hover:translate-x-1 hover:font-medium">{item}</a>
                                                                             </li>
                                                                         ))}
                                                                     </ul>

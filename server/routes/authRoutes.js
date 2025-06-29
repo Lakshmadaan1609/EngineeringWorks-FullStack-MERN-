@@ -24,4 +24,22 @@ router.post('/login', (req, res) => {
   return res.status(401).json({ message: 'Invalid credentials' });
 });
 
+// @route   GET api/auth/validate
+// @desc    Validate token
+// @access  Private
+router.get('/validate', (req, res) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    res.json({ valid: true, user: decoded });
+  } catch (error) {
+    res.status(401).json({ message: 'Token is not valid' });
+  }
+});
+
 module.exports = router; 
