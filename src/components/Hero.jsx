@@ -1,5 +1,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { motion } from 'framer-motion';
+import { FiArrowRight, FiPlay, FiChevronDown } from 'react-icons/fi';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -10,64 +12,199 @@ const slideData = [
     {
         image: '/img-1.jpg',
         title: 'Engineering Excellence, Building the Future',
-        subtitle: 'Precision, Innovation, and Quality in Every Project.'
+        subtitle: 'Precision, Innovation, and Quality in Every Project.',
+        description: 'We specialize in manufacturing high-quality industrial components with cutting-edge technology and unmatched expertise.',
+        cta: 'Get Quote',
+        secondaryCta: 'Watch Video'
     },
     {
         image: 'https://images.unsplash.com/photo-1428908728789-d2de25dbd4e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
         title: 'Pioneering Advanced Infrastructure',
-        subtitle: 'From concept to completion, we deliver cutting-edge solutions.'
+        subtitle: 'From concept to completion, we deliver cutting-edge solutions.',
+        description: 'Our comprehensive range of industrial products serves diverse sectors with reliability and performance.',
+        cta: 'Explore Products',
+        secondaryCta: 'Learn More'
     },
-    
+    {
+        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80',
+        title: 'Industrial Solutions for Tomorrow',
+        subtitle: 'Innovation meets reliability in every component we manufacture.',
+        description: 'Trusted by leading industries worldwide for our commitment to quality and technological advancement.',
+        cta: 'Contact Us',
+        secondaryCta: 'View Catalogue'
+    }
 ];
+
+const textVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+        opacity: 1, 
+        y: 0,
+        transition: { duration: 0.8, ease: 'easeOut' }
+    }
+};
+
+const buttonVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+        opacity: 1, 
+        y: 0,
+        transition: { duration: 0.6, ease: 'easeOut', delay: 0.3 }
+    }
+};
 
 const Hero = () => {
     return (
-        <div className="relative h-screen w-full">
+        <div className="relative h-screen w-full overflow-hidden">
             <Swiper
-                modules={[Navigation, Pagination, Autoplay, EffectFade]}
+                modules={[Navigation, Autoplay, EffectFade]}
                 effect="fade"
                 fadeEffect={{ crossFade: true }}
-                navigation
-                pagination={{ clickable: true }}
-                autoplay={{ delay: 6000, disableOnInteraction: false }}
+                navigation={{
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                }}
+                autoplay={{ delay: 8000, disableOnInteraction: false }}
                 loop={true}
+                speed={1000}
                 className="h-full"
             >
                 {slideData.map((slide, index) => (
                     <SwiperSlide key={index}>
                         <div
-                            className="h-full w-full bg-cover bg-center"
+                            className="h-full w-full bg-cover bg-center relative"
                             style={{ backgroundImage: `url(${slide.image})` }}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent flex items-center">
-                                <div className="w-full max-w-4xl mx-auto px-8 md:px-16">
-                                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight leading-tight">
-                                        {slide.title}
+                            {/* Overlay with gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
+                            
+                            {/* Animated background elements */}
+                            <div className="absolute inset-0 overflow-hidden">
+                                <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+                                <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-green-500/5 rounded-full blur-2xl animate-float"></div>
+                            </div>
+                            
+                            {/* Content */}
+                            <div className="relative z-10 h-full flex items-center">
+                                <div className="w-full max-w-6xl mx-auto px-8 md:px-16">
+                                    <motion.div
+                                        initial="hidden"
+                                        animate="visible"
+                                        variants={textVariants}
+                                        className="max-w-4xl"
+                                    >
+                                        {/* Title */}
+                                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
+                                            {slide.title.split(' ').map((word, i) => (
+                                                <motion.span
+                                                    key={i}
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.6, delay: 0.3 + i * 0.1 }}
+                                                    className="inline-block mr-3 hover:text-blue-300 transition-colors duration-300"
+                                                >
+                                                    {word}
+                                                </motion.span>
+                                            ))}
                                     </h1>
-                                    <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl">
+                                        
+                                        {/* Subtitle */}
+                                        <motion.p
+                                            variants={textVariants}
+                                            className="text-lg md:text-xl text-blue-200 mb-4 font-medium"
+                                        >
                                         {slide.subtitle}
-                                    </p>
-                                    <button className="bg-black text-white px-8 py-3 rounded-full font-bold hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
-                                        Quote Us
-                                    </button>
+                                        </motion.p>
+                                        
+                                        {/* Description */}
+                                        <motion.p
+                                            variants={textVariants}
+                                            className="text-base md:text-lg text-gray-300 mb-6 max-w-2xl leading-relaxed"
+                                        >
+                                            {slide.description}
+                                        </motion.p>
+                                        
+                                        {/* CTA Buttons */}
+                                        <motion.div
+                                            variants={buttonVariants}
+                                            className="flex flex-col sm:flex-row gap-3"
+                                        >
+                                            <motion.button
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className="group bg-black text-white px-6 py-3 rounded-full font-semibold text-base shadow-xl hover:bg-blue-600 transition-all duration-300 flex items-center justify-center gap-2 btn-hover"
+                                            >
+                                                {slide.cta}
+                                                <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                                            </motion.button>
+                                            
+                                            <motion.button
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className="group bg-white/10 backdrop-blur-md text-white px-6 py-3 rounded-full font-semibold text-base border border-white/20 hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2 btn-hover"
+                                            >
+                                                <FiPlay className="w-4 h-4" />
+                                                {slide.secondaryCta}
+                                            </motion.button>
+                                        </motion.div>
+                                        
+                                        {/* Stats */}
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 30 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.8, delay: 0.6 }}
+                                            className="flex flex-wrap gap-6 mt-8 pt-6 border-t border-white/20"
+                                        >
+                                            <div className="text-center group">
+                                                <div className="text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors duration-300">25+</div>
+                                                <div className="text-gray-300 text-xs">Years Experience</div>
+                                            </div>
+                                            <div className="text-center group">
+                                                <div className="text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors duration-300">500+</div>
+                                                <div className="text-gray-300 text-xs">Projects Completed</div>
+                                            </div>
+                                            <div className="text-center group">
+                                                <div className="text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors duration-300">50+</div>
+                                                <div className="text-gray-300 text-xs">Countries Served</div>
+                                            </div>
+                                        </motion.div>
+                                    </motion.div>
                                 </div>
                             </div>
                         </div>
                     </SwiperSlide>
                 ))}
             </Swiper>
+            
+            {/* Custom Navigation */}
+            <div className="swiper-button-next !text-white !w-12 !h-12 !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 hover:!bg-white/20 transition-all duration-300"></div>
+            <div className="swiper-button-prev !text-white !w-12 !h-12 !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 hover:!bg-white/20 transition-all duration-300"></div>
+            
+            {/* Scroll Indicator */}
+            <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2, duration: 1 }}
+                className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-white/70"
+            >
+                <span className="text-sm mb-2">Scroll to explore</span>
+                <motion.div
+                    animate={{ y: [0, 10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center"
+                >
+                    <motion.div
+                        animate={{ y: [0, 12, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-1 h-3 bg-white/50 rounded-full mt-2"
+                    />
+                </motion.div>
+            </motion.div>
+            
             <style>{`
-                .swiper-button-next, .swiper-button-prev {
-                    color: #fff;
-                }
-                .swiper-pagination-bullet {
-                    background: rgba(255, 255, 255, 0.5);
-                    width: 12px;
-                    height: 12px;
-                    opacity: 1;
-                }
-                .swiper-pagination-bullet-active {
-                    background: #f59e0b;
+                .swiper-button-next::after, .swiper-button-prev::after {
+                    font-size: 18px;
                 }
             `}</style>
         </div>
