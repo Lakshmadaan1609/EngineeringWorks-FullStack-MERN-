@@ -86,7 +86,7 @@ const Catalogue = () => {
     : products;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
+    <div className="max-w-7xl mx-auto px-4 py-16 mt-9">
       <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">Product Catalogue</h1>
       <p className="text-gray-600 mb-10 text-center max-w-2xl mx-auto">
         Browse our wide range of industrial products and solutions.
@@ -119,12 +119,12 @@ const Catalogue = () => {
               </p>
               <button
                 onClick={() => setExpandedProduct(expandedProduct === product._id ? null : product._id)}
-                className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700 transition-colors duration-300 self-start text-sm flex items-center gap-2"
+                className="mt-3 px-4 py-2 bg-black text-white rounded-lg font-semibold shadow hover:bg-blue-600 transition-all duration-300 self-start text-sm flex items-center gap-2"
               >
                 View Details
                 <motion.div
                   animate={{ rotate: expandedProduct === product._id ? 180 : 0 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
                 >
                   <FiChevronDown className="w-4 h-4" />
                 </motion.div>

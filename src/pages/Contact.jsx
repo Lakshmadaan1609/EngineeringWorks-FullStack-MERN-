@@ -17,7 +17,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 py-8 px-4 mt-16 md:mt-20">
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white flex items-center justify-center py-8 px-4 mt-9">
       <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 md:p-8 flex flex-col md:flex-row gap-8">
         {/* Contact Info */}
         <div className="flex-1 flex flex-col gap-6 justify-center">

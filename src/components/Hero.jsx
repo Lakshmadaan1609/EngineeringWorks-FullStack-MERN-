@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from 'framer-motion';
-import { FiArrowRight, FiPlay, FiChevronDown } from 'react-icons/fi';
+import { FiArrowRight, FiPlay, FiChevronDown, FiX } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -53,7 +54,47 @@ const buttonVariants = {
     }
 };
 
+// Map secondary CTA to YouTube video links
+const videoLinks = {
+    'Watch Video': 'https://www.youtube.com/embed/2e-eXJ6HgkQ', // Example video
+    'Learn More': 'https://www.youtube.com/embed/2e-eXJ6HgkQ', // Example video
+    'View Catalogue': 'https://www.youtube.com/embed/2e-eXJ6HgkQ', // Optional
+};
+
 const Hero = () => {
+    const [showQuoteModal, setShowQuoteModal] = useState(false);
+    const [quoteForm, setQuoteForm] = useState({ name: '', email: '' });
+    const [quoteSubmitted, setQuoteSubmitted] = useState(false);
+    const [showVideoModal, setShowVideoModal] = useState(false);
+    const [videoUrl, setVideoUrl] = useState('');
+    const navigate = useNavigate();
+
+    // Unified CTA handler
+    const handleCta = (cta) => {
+        if (cta === 'Explore Products') navigate('/catalogue');
+        else if (cta === 'Contact Us') navigate('/contact');
+        else if (cta === 'Get Quote') setShowQuoteModal(true);
+    };
+
+    const handleSecondaryCta = (secondaryCta) => {
+        if (secondaryCta === 'Learn More') {
+            navigate('/about-us');
+        } else if (videoLinks[secondaryCta]) {
+            setVideoUrl(videoLinks[secondaryCta]);
+            setShowVideoModal(true);
+        }
+    };
+
+    const handleQuoteSubmit = (e) => {
+        e.preventDefault();
+        setQuoteSubmitted(true);
+        setTimeout(() => {
+            setShowQuoteModal(false);
+            setQuoteSubmitted(false);
+            setQuoteForm({ name: '', email: '' });
+        }, 2000);
+    };
+
     return (
         <div className="relative h-screen w-full overflow-hidden">
             <Swiper
@@ -130,19 +171,22 @@ const Hero = () => {
                                             variants={buttonVariants}
                                             className="flex flex-col sm:flex-row gap-3"
                                         >
+                                            {/* Main CTA Button (clean, single handler) */}
                                             <motion.button
                                                 whileHover={{ scale: 1.05 }}
                                                 whileTap={{ scale: 0.95 }}
                                                 className="group bg-black text-white px-6 py-3 rounded-full font-semibold text-base shadow-xl hover:bg-blue-600 transition-all duration-300 flex items-center justify-center gap-2 btn-hover"
+                                                onClick={() => handleCta(slide.cta)}
                                             >
                                                 {slide.cta}
                                                 <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                                             </motion.button>
-                                            
+                                            {/* Secondary CTA opens video modal if mapped */}
                                             <motion.button
                                                 whileHover={{ scale: 1.05 }}
                                                 whileTap={{ scale: 0.95 }}
                                                 className="group bg-white/10 backdrop-blur-md text-white px-6 py-3 rounded-full font-semibold text-base border border-white/20 hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2 btn-hover"
+                                                onClick={() => handleSecondaryCta(slide.secondaryCta)}
                                             >
                                                 <FiPlay className="w-4 h-4" />
                                                 {slide.secondaryCta}
@@ -201,6 +245,83 @@ const Hero = () => {
                     />
                 </motion.div>
             </motion.div>
+            
+            {/* Modal for Get Quote (moved outside Swiper for efficiency) */}
+            {showQuoteModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm relative"
+                    >
+                        <button
+                            className="absolute top-3 right-3 text-gray-400 hover:text-red-500"
+                            onClick={() => setShowQuoteModal(false)}
+                        >
+                            <FiX className="w-6 h-6" />
+                        </button>
+                        <h2 className="text-xl font-bold mb-4 text-gray-900">Get a Quote</h2>
+                        {quoteSubmitted ? (
+                            <div className="text-green-600 text-center font-semibold py-8">Thank you! We'll contact you soon.</div>
+                        ) : (
+                            <form onSubmit={handleQuoteSubmit} className="flex flex-col gap-4">
+                                <input
+                                    type="text"
+                                    placeholder="Your Name"
+                                    className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
+                                    value={quoteForm.name}
+                                    onChange={e => setQuoteForm({ ...quoteForm, name: e.target.value })}
+                                    required
+                                />
+                                <input
+                                    type="email"
+                                    placeholder="Your Email"
+                                    className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
+                                    value={quoteForm.email}
+                                    onChange={e => setQuoteForm({ ...quoteForm, email: e.target.value })}
+                                    required
+                                />
+                                <button
+                                    type="submit"
+                                    className="bg-blue-600 text-white rounded-lg px-4 py-2 font-semibold hover:bg-blue-700 transition-colors"
+                                >
+                                    Submit
+                                </button>
+                            </form>
+                        )}
+                    </motion.div>
+                </div>
+            )}
+            
+            {/* Modal for Video */}
+            {showVideoModal && videoUrl && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className="bg-black rounded-2xl shadow-2xl p-2 md:p-4 w-full max-w-2xl relative flex flex-col items-center"
+                    >
+                        <button
+                            className="absolute top-3 right-3 text-gray-400 hover:text-red-500 z-10"
+                            onClick={() => setShowVideoModal(false)}
+                        >
+                            <FiX className="w-7 h-7" />
+                        </button>
+                        <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
+                            <iframe
+                                src={videoUrl}
+                                title="YouTube video"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="w-full h-full"
+                            ></iframe>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
             
             <style>{`
                 .swiper-button-next::after, .swiper-button-prev::after {

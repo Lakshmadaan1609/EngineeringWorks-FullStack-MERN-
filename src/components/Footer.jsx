@@ -17,9 +17,9 @@ const Footer = () => (
       <nav className="flex flex-col md:flex-row gap-3 md:gap-8 text-base items-center font-medium">
         <Link to="/" className="hover:text-blue-400 transition-colors duration-200">Home</Link>
         <Link to="/catalogue" className="hover:text-blue-400 transition-colors duration-200">Catalogue</Link>
-        <a href="#about-us" className="hover:text-blue-400 transition-colors duration-200">About Us</a>
-        <a href="#our-blog" className="hover:text-blue-400 transition-colors duration-200">Our Blog</a>
-        <a href="#contact" className="hover:text-blue-400 transition-colors duration-200">Contact</a>
+        <Link to="/about-us" className="hover:text-blue-400 transition-colors duration-200">About Us</Link>
+        <Link to="/blog" className="hover:text-blue-400 transition-colors duration-200">Our Blog</Link>
+        <Link to="/contact" className="hover:text-blue-400 transition-colors duration-200">Contact</Link>
       </nav>
       {/* Social Media */}
       <div className="flex gap-5 items-center">

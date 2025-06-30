@@ -2,7 +2,7 @@ import React from 'react';
 
 const AboutUs = () => {
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-white pt-24 pb-12 px-4">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:mx-0">
           <p className="text-base font-semibold leading-7 text-blue-600">NISHI ENTERPRISE</p>
