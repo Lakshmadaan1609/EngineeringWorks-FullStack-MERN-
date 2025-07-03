@@ -100,6 +100,7 @@ const Logo = ({ className = "" }) => (
 const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [showNavbar, setShowNavbar] = useState(true);
     const lastScrollY = useRef(window.scrollY);
@@ -127,7 +128,7 @@ const Navbar = () => {
             initial={{ y: 0 }}
             animate={{ y: showNavbar ? 0 : -100 }}
             transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-            className={`w-full py-3 px-4 md:px-8 flex items-center justify-between fixed top-0 left-0 z-50 ${
+            className={`w-full py-2 sm:py-3 px-2 sm:px-4 md:px-8 flex items-center justify-between fixed top-0 left-0 z-50 ${
                 scrolled
                     ? 'bg-white bg-gradient-to-r from-white via-sky-400/15 to-white backdrop-blur-md shadow-lg border-b border-gray-200/50'
                     : 'bg-white bg-gradient-to-r from-white via-sky-400/15 to-white backdrop-blur-sm'
@@ -139,12 +140,12 @@ const Navbar = () => {
                 </Link>
                 
                 {/* Hamburger for mobile */}
-                <button className="md:hidden ml-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                <button className="flex lg:hidden ml-auto order-last" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                     {mobileMenuOpen ? <FiX size={26} /> : <FiMenu size={26} />}
                 </button>
                 
                 {/* Desktop Nav */}
-                <ul className="hidden md:flex gap-5 md:gap-6 ml-4 md:ml-6">
+                <ul className="hidden lg:flex gap-6 md:gap-8 ml-4 md:ml-6">
                     {navItems.slice(1).map((item) => {
                         if (item.name === "Our Products") {
                             return (
@@ -165,7 +166,7 @@ const Navbar = () => {
                                                 animate="visible"
                                                 exit="hidden"
                                                 variants={dropdownVariants}
-                                                className="absolute left-1/2 -translate-x-1/2 mt-4 w-max max-w-5xl bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-100/50 p-5 md:p-7"
+                                                className="absolute left-1/2 -translate-x-1/2 mt-4 w-max max-w-5xl bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-100/50 p-5 md:p-7 max-h-96 overflow-y-auto"
                                             >
                                                 <motion.div 
                                                     className="grid grid-cols-1 md:grid-cols-4 gap-x-7 md:gap-x-10 gap-y-5 md:gap-y-6"
@@ -243,7 +244,7 @@ const Navbar = () => {
             <motion.a
                 href="/brochure.pdf"
                 download
-                className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm group hover:scale-105"
+                className="hidden lg:flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm group hover:scale-105"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
@@ -258,15 +259,66 @@ const Navbar = () => {
                         initial={{ opacity: 0, y: -20 }} 
                         animate={{ opacity: 1, y: 0 }} 
                         exit={{ opacity: 0, y: -20 }} 
-                        className="absolute top-full left-0 w-full bg-white shadow-lg flex flex-col gap-2 py-4 px-6 md:hidden z-50"
+                        className="absolute top-full left-0 w-full bg-white shadow-lg flex flex-col gap-2 py-4 px-6 md:hidden z-50 h-screen overflow-y-auto"
                     >
                         <div className="flex flex-col gap-1 py-3 px-4">
                             {navItems.slice(1).map((item) => (
                                 <div key={item.name} className="py-1">
-                                    {item.name === "Catalogue" ? (
+                                    {item.name === "Our Products" ? (
+                                        <>
+                                            <button
+                                                className="block w-full text-left text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-between"
+                                                onClick={() => setMobileProductsOpen((open) => !open)}
+                                            >
+                                                {item.name}
+                                                <FiChevronDown className={`ml-2 transition-transform duration-200 ${mobileProductsOpen ? 'rotate-180' : ''}`} />
+                                            </button>
+                                            {mobileProductsOpen && (
+                                                <div className="pl-4 pt-2">
+                                                    {Object.entries(productData).map(([category, subcategories]) => (
+                                                        <div key={category} className="mb-2">
+                                                            <div className="font-semibold text-gray-800 text-sm mb-1">{category}</div>
+                                                            {Object.entries(subcategories).map(([subcategory, items]) => (
+                                                                <div key={subcategory} className="mb-1">
+                                                                    <button
+                                                                        className="text-gray-700 hover:text-blue-600 text-xs py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                                        onClick={() => {
+                                                                            navigate(`/catalogue?column=${encodeURIComponent(subcategory)}&item=${encodeURIComponent(items[0])}`);
+                                                                            setMobileMenuOpen(false);
+                                                                            setMobileProductsOpen(false);
+                                                                        }}
+                                                                    >
+                                                                        {subcategory}
+                                                                    </button>
+                                                                    {items.length > 0 && (
+                                                                        <ul className="pl-4 list-disc text-gray-500 text-xs">
+                                                                            {items.map(item => (
+                                                                                <li key={item}>
+                                                                                    <button
+                                                                                        className="text-gray-700 hover:text-blue-600 py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                                                        onClick={() => {
+                                                                                            navigate(`/catalogue?column=${encodeURIComponent(subcategory)}&item=${encodeURIComponent(item)}`);
+                                                                                            setMobileMenuOpen(false);
+                                                                                            setMobileProductsOpen(false);
+                                                                                        }}
+                                                                                    >
+                                                                                        {item}
+                                                                                    </button>
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : item.name === "Catalogue" ? (
                                         <Link
                                             to="/catalogue"
-                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50"
+                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
                                             {item.name}
@@ -274,7 +326,7 @@ const Navbar = () => {
                                     ) : item.name === "Contact" ? (
                                         <Link
                                             to="/contact"
-                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50"
+                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
                                             {item.name}
@@ -282,7 +334,7 @@ const Navbar = () => {
                                     ) : item.name === "About Us" ? (
                                         <Link
                                             to="/about-us"
-                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50"
+                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
                                             {item.name}
@@ -290,7 +342,7 @@ const Navbar = () => {
                                     ) : item.name === "Our Blog" ? (
                                         <Link
                                             to="/blog"
-                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50"
+                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
                                             {item.name}
@@ -298,7 +350,7 @@ const Navbar = () => {
                                     ) : (
                                         <a
                                             href={`#${item.name.toLowerCase().replace(/\s+/g, "-")}`}
-                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50"
+                                            className="block text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200 py-2 px-3 rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             onClick={() => setMobileMenuOpen(false)}
                                         >
                                             {item.name}
