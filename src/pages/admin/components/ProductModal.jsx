@@ -77,7 +77,7 @@ const ProductModal = ({ product, onSave, onClose }) => {
         const formData = new FormData();
         formData.append('image', selectedFile);
         
-        const response = await axios.post('http://localhost:5000/api/upload', formData, {
+        const response = await axios.post('https://engineerworks-backend.onrender.com/api/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}`

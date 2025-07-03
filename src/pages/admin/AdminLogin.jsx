@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiUser, FiLock, FiEye, FiEyeOff, FiShield } from 'react-icons/fi';
@@ -12,13 +12,6 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login, token, loading } = useContext(AuthContext);
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (!loading && token) {
-      navigate('/admin/dashboard');
-    }
-  }, [token, loading, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -48,11 +41,6 @@ const AdminLogin = () => {
         </motion.div>
       </div>
     );
-  }
-
-  // Don't show login form if already authenticated
-  if (token) {
-    return null;
   }
 
   return (

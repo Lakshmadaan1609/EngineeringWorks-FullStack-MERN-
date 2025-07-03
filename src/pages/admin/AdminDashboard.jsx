@@ -13,7 +13,7 @@ const AdminDashboard = () => {
   const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const API_URL = 'http://localhost:5000/api/products';
+  const API_URL = 'https://engineerworks-backend.onrender.com/api/products';
 
   const getAuthHeaders = () => ({
     headers: { Authorization: `Bearer ${token}` }
