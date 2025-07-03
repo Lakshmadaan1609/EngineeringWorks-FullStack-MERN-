@@ -96,7 +96,7 @@ const Hero = () => {
     };
 
     return (
-        <div className="relative h-screen w-full overflow-hidden">
+        <div className="relative h-screen w-full overflow-hidden pt-16 sm:pt-0">
             <Swiper
                 modules={[Navigation, Autoplay, EffectFade]}
                 effect="fade"
@@ -222,8 +222,8 @@ const Hero = () => {
             </Swiper>
             
             {/* Custom Navigation */}
-            <div className="swiper-button-next !text-white !w-12 !h-12 !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 hover:!bg-white/20 transition-all duration-300"></div>
-            <div className="swiper-button-prev !text-white !w-12 !h-12 !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 hover:!bg-white/20 transition-all duration-300"></div>
+            <div className="swiper-button-next w-8 h-8 sm:!w-12 sm:!h-12 !text-white !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 hover:!bg-white/20 transition-all duration-300"></div>
+            <div className="swiper-button-prev w-8 h-8 sm:!w-12 sm:!h-12 !text-white !bg-white/10 !backdrop-blur-md !rounded-full !border !border-white/20 hover:!bg-white/20 transition-all duration-300"></div>
             
             {/* Scroll Indicator */}
             <motion.div 

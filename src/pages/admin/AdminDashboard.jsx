@@ -86,28 +86,30 @@ const AdminDashboard = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="container mx-auto p-8">
-        <header className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800">Products</h1>
-          <div className="flex items-center gap-4">
+      <div className="container mx-auto p-4 sm:p-6 md:p-8">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 sm:mb-0">Products</h1>
+          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={handleAddProduct}
-              className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300"
+              className="flex items-center justify-center gap-2 bg-indigo-600 text-white px-4 py-2 sm:px-5 sm:py-3 rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-300 w-full sm:w-auto text-sm sm:text-base"
             >
               <FiPlus size={20} />
-              <span>Add Product</span>
+              <span className="hidden sm:inline">Add Product</span>
+              <span className="sm:hidden">Add</span>
             </button>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 bg-red-600 text-white px-5 py-3 rounded-lg shadow-md hover:bg-red-700 transition-colors duration-300"
+              className="flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-2 sm:px-5 sm:py-3 rounded-lg shadow-md hover:bg-red-700 transition-colors duration-300 w-full sm:w-auto text-sm sm:text-base"
             >
               <FiLogOut size={20} />
-              <span>Logout</span>
+              <span className="hidden sm:inline">Logout</span>
+              <span className="sm:hidden">Exit</span>
             </button>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {products.length > 0 ? products.map((product) => (
             <ProductCard
               key={product._id}

@@ -48,10 +48,10 @@ const EmailNewsletter = () => {
   const heading = 'Subscribe for Updates & Newsletters';
 
   return (
-    <section className="py-16 bg-white flex flex-col items-center">
+    <section className="py-10 sm:py-14 md:py-16 bg-white flex flex-col items-center px-2 sm:px-4 md:px-0">
       <h2
         ref={headingRef}
-        className="flex flex-wrap justify-center text-2xl md:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight"
+        className="flex flex-wrap justify-center text-xl sm:text-2xl md:text-4xl font-extrabold text-gray-900 mb-4 tracking-tight text-center"
         style={{ perspective: 600 }}
       >
         {heading.split('').map((char, i) => (
@@ -60,32 +60,32 @@ const EmailNewsletter = () => {
           </span>
         ))}
       </h2>
-      <p className="text-gray-600 mb-8 text-center max-w-xl">
+      <p className="text-gray-600 mb-8 text-center max-w-xl text-sm sm:text-base">
         Get the latest updates, product launches, and industry news delivered straight to your inbox.
       </p>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-md"
+        className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full max-w-md"
       >
         <input
           type="email"
           required
           placeholder={placeholder}
-          className="flex-1 px-4 py-3 rounded-full border border-gray-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-base"
+          className="flex-1 px-4 py-3 rounded-full border border-gray-300 shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-base text-gray-900 placeholder-gray-400 bg-white w-full sm:w-auto"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={submitted}
         />
         <button
           type="submit"
-          className="px-6 py-3 bg-black text-white rounded-full font-semibold shadow hover:bg-blue-700 transition-colors duration-300 text-base"
+          className="px-6 py-3 bg-black text-white rounded-full font-semibold shadow hover:bg-blue-700 transition-colors duration-300 text-base w-full sm:w-auto"
           disabled={submitted}
         >
           {submitted ? 'Subscribed!' : 'Subscribe Now'}
         </button>
       </form>
       {submitted && (
-        <p className="mt-4 text-green-600 font-medium animate-pulse">Thank you for subscribing!</p>
+        <p className="mt-4 text-green-600 font-medium animate-pulse text-center">Thank you for subscribing!</p>
       )}
     </section>
   );

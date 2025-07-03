@@ -7,9 +7,38 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Validate token on app start (no longer from localStorage)
   useEffect(() => {
-    setLoading(false);
+    const validateSession = async () => {
+      const refreshAllowed = sessionStorage.getItem('refresh_allowed');
+      const storedToken = sessionStorage.getItem('token');
+
+      if (refreshAllowed === 'true' && storedToken) {
+        // First refresh is allowed, let's validate the token
+        try {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+          await axios.get('https://engineerworks-backend.onrender.com/api/auth/validate');
+          
+          // Token is valid. Keep the user logged in but use up the refresh allowance.
+          setToken(storedToken);
+          sessionStorage.setItem('refresh_allowed', 'false');
+        } catch (error) {
+          // Token is invalid, log out completely
+          console.log('Token validation failed on refresh, logging out.');
+          setToken(null);
+          sessionStorage.removeItem('token');
+          sessionStorage.removeItem('refresh_allowed');
+          delete axios.defaults.headers.common['Authorization'];
+        }
+      } else {
+        // This is a second refresh or a new session, so force logout.
+        setToken(null);
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('refresh_allowed');
+      }
+      setLoading(false);
+    };
+
+    validateSession();
   }, []);
 
   useEffect(() => {
@@ -27,8 +56,11 @@ export const AuthProvider = ({ children }) => {
         username,
         password,
       });
-      const { token } = response.data;
-      setToken(token);
+      const { token: responseToken } = response.data;
+      setToken(responseToken);
+      // Store token in sessionStorage and grant one refresh
+      sessionStorage.setItem('token', responseToken);
+      sessionStorage.setItem('refresh_allowed', 'true');
       return true;
     } catch (error) {
       console.error('Login failed', error);
@@ -38,6 +70,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setToken(null);
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('refresh_allowed');
   };
 
   return (
